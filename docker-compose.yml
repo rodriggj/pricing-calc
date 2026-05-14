@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: estimating_app
+      POSTGRES_PASSWORD: dev_only_password
+      POSTGRES_DB: estimating_app
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U estimating_app -d estimating_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  postgres_data:
