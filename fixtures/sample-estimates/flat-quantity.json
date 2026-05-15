@@ -1,0 +1,51 @@
+{
+  "id": "est-flat-001",
+  "ownerId": "user-001",
+  "orgId": "org-001",
+  "name": "Flat Quantity Estimate",
+  "status": "APPROVED",
+  "yearOneStartMonth": "2024-01-01",
+  "pinnedArchitectureRevisionId": "arch-rev-flat-001",
+  "lineItems": [
+    {
+      "id": "li-flat-001",
+      "serviceCode": "ec2",
+      "configuration": { "instanceType": "t3.medium", "os": "linux" },
+      "region": "us-east-1",
+      "quantityPerYear": [10, 10, 10, 10, 10],
+      "status": "ADDED",
+      "failureReason": null
+    },
+    {
+      "id": "li-flat-002",
+      "serviceCode": "s3",
+      "configuration": { "storageClass": "STANDARD", "gbPerMonth": 100 },
+      "region": "us-east-1",
+      "quantityPerYear": [5, 5, 5, 5, 5],
+      "status": "ADDED",
+      "failureReason": null
+    },
+    {
+      "id": "li-flat-003",
+      "serviceCode": "rds",
+      "configuration": { "engine": "postgres", "instanceClass": "db.t3.medium" },
+      "region": "us-east-1",
+      "quantityPerYear": [2, 2, 2, 2, 2],
+      "status": "ADDED",
+      "failureReason": null
+    }
+  ],
+  "createdAt": "2024-01-15T10:00:00.000Z",
+  "updatedAt": "2024-01-20T14:30:00.000Z",
+  "architectureRevisions": [
+    {
+      "id": "arch-rev-flat-001",
+      "estimateId": "est-flat-001",
+      "mermaidSource": "graph TD\n  A[EC2 Instances] --> B[S3 Storage]\n  A --> C[RDS Postgres]",
+      "agentCommentary": "Simple three-tier architecture with flat resource allocation across all years.",
+      "generationReason": "initial_architecture",
+      "promptMetadata": null,
+      "createdAt": "2024-01-15T10:05:00.000Z"
+    }
+  ]
+}

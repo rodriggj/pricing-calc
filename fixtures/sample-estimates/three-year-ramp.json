@@ -1,0 +1,51 @@
+{
+  "id": "est-ramp-001",
+  "ownerId": "user-002",
+  "orgId": "org-002",
+  "name": "Three-Year Ramp Estimate",
+  "status": "APPROVED",
+  "yearOneStartMonth": "2024-03-01",
+  "pinnedArchitectureRevisionId": "arch-rev-ramp-001",
+  "lineItems": [
+    {
+      "id": "li-ramp-001",
+      "serviceCode": "ec2",
+      "configuration": { "instanceType": "m5.large", "os": "linux", "tenancy": "default" },
+      "region": "us-east-1",
+      "quantityPerYear": [1, 2, 3, 4, 5],
+      "status": "ADDED",
+      "failureReason": null
+    },
+    {
+      "id": "li-ramp-002",
+      "serviceCode": "lambda",
+      "configuration": { "memoryMB": 512, "avgDurationMs": 200 },
+      "region": "us-east-1",
+      "quantityPerYear": [2, 4, 6, 8, 10],
+      "status": "ADDED",
+      "failureReason": null
+    },
+    {
+      "id": "li-ramp-003",
+      "serviceCode": "dynamodb",
+      "configuration": { "capacityMode": "ON_DEMAND", "tableClass": "STANDARD" },
+      "region": "us-east-1",
+      "quantityPerYear": [1, 3, 5, 7, 9],
+      "status": "ADDED",
+      "failureReason": null
+    }
+  ],
+  "createdAt": "2024-03-01T08:00:00.000Z",
+  "updatedAt": "2024-03-10T16:45:00.000Z",
+  "architectureRevisions": [
+    {
+      "id": "arch-rev-ramp-001",
+      "estimateId": "est-ramp-001",
+      "mermaidSource": "graph TD\n  Client[Client App] --> LB[Load Balancer]\n  LB --> EC2[EC2 Fleet]\n  EC2 --> Lambda[Lambda Functions]\n  EC2 --> DDB[DynamoDB Tables]\n  Lambda --> DDB",
+      "agentCommentary": "Serverless-first architecture with EC2 for steady-state workloads. Resources scale linearly year-over-year to match projected growth.",
+      "generationReason": "user_requested_revision",
+      "promptMetadata": null,
+      "createdAt": "2024-03-01T08:10:00.000Z"
+    }
+  ]
+}

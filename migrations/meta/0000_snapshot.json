@@ -1,0 +1,526 @@
+{
+  "id": "30ea4c4e-1025-4356-9d87-dafd11231135",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "architecture_revisions": {
+      "name": "architecture_revisions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "estimate_id": {
+          "name": "estimate_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mermaid_source": {
+          "name": "mermaid_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "agent_commentary": {
+          "name": "agent_commentary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "generation_reason": {
+          "name": "generation_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prompt_metadata": {
+          "name": "prompt_metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "arch_revisions_estimate_idx": {
+          "name": "arch_revisions_estimate_idx",
+          "columns": [
+            "estimate_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "architecture_revisions_estimate_id_estimates_id_fk": {
+          "name": "architecture_revisions_estimate_id_estimates_id_fk",
+          "tableFrom": "architecture_revisions",
+          "tableTo": "estimates",
+          "columnsFrom": [
+            "estimate_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "estimate_audit_log": {
+      "name": "estimate_audit_log",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "estimate_id": {
+          "name": "estimate_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "action_type": {
+          "name": "action_type",
+          "type": "audit_action_type",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "details": {
+          "name": "details",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "audit_estimate_idx": {
+          "name": "audit_estimate_idx",
+          "columns": [
+            "estimate_id"
+          ],
+          "isUnique": false
+        },
+        "audit_action_idx": {
+          "name": "audit_action_idx",
+          "columns": [
+            "action_type"
+          ],
+          "isUnique": false
+        },
+        "audit_created_idx": {
+          "name": "audit_created_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "estimate_audit_log_estimate_id_estimates_id_fk": {
+          "name": "estimate_audit_log_estimate_id_estimates_id_fk",
+          "tableFrom": "estimate_audit_log",
+          "tableTo": "estimates",
+          "columnsFrom": [
+            "estimate_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "estimates": {
+      "name": "estimates",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "org_id": {
+          "name": "org_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Untitled Estimate'"
+        },
+        "status": {
+          "name": "status",
+          "type": "estimate_status",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'DRAFT'"
+        },
+        "year_one_start_month": {
+          "name": "year_one_start_month",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pinned_architecture_revision_id": {
+          "name": "pinned_architecture_revision_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "run_lock_holder": {
+          "name": "run_lock_holder",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "run_lock_expires_at": {
+          "name": "run_lock_expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "estimates_owner_idx": {
+          "name": "estimates_owner_idx",
+          "columns": [
+            "owner_id"
+          ],
+          "isUnique": false
+        },
+        "estimates_org_idx": {
+          "name": "estimates_org_idx",
+          "columns": [
+            "org_id"
+          ],
+          "isUnique": false
+        },
+        "estimates_status_idx": {
+          "name": "estimates_status_idx",
+          "columns": [
+            "status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "estimates_pinned_architecture_revision_id_architecture_revisions_id_fk": {
+          "name": "estimates_pinned_architecture_revision_id_architecture_revisions_id_fk",
+          "tableFrom": "estimates",
+          "tableTo": "architecture_revisions",
+          "columnsFrom": [
+            "pinned_architecture_revision_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "line_items": {
+      "name": "line_items",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "estimate_id": {
+          "name": "estimate_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "service_code": {
+          "name": "service_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "configuration": {
+          "name": "configuration",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "region": {
+          "name": "region",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'us-east-1'"
+        },
+        "quantity_per_year": {
+          "name": "quantity_per_year",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "line_item_status",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING'"
+        },
+        "failure_reason": {
+          "name": "failure_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "line_items_estimate_idx": {
+          "name": "line_items_estimate_idx",
+          "columns": [
+            "estimate_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "line_items_estimate_id_estimates_id_fk": {
+          "name": "line_items_estimate_id_estimates_id_fk",
+          "tableFrom": "line_items",
+          "tableTo": "estimates",
+          "columnsFrom": [
+            "estimate_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "share_url_revisions": {
+      "name": "share_url_revisions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "estimate_id": {
+          "name": "estimate_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "share_url": {
+          "name": "share_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_first_pass": {
+          "name": "is_first_pass",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "share_revisions_estimate_idx": {
+          "name": "share_revisions_estimate_idx",
+          "columns": [
+            "estimate_id"
+          ],
+          "isUnique": false
+        },
+        "share_revisions_first_pass_unique": {
+          "name": "share_revisions_first_pass_unique",
+          "columns": [
+            "estimate_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "share_url_revisions_estimate_id_estimates_id_fk": {
+          "name": "share_url_revisions_estimate_id_estimates_id_fk",
+          "tableFrom": "share_url_revisions",
+          "tableTo": "estimates",
+          "columnsFrom": [
+            "estimate_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "audit_action_type": {
+      "name": "audit_action_type",
+      "values": {
+        "VIEWED": "VIEWED",
+        "CONTEXT_EDITED": "CONTEXT_EDITED",
+        "DOCUMENT_UPLOADED": "DOCUMENT_UPLOADED",
+        "DOCUMENT_DELETED": "DOCUMENT_DELETED",
+        "APPROVED": "APPROVED",
+        "RUN_STARTED": "RUN_STARTED",
+        "RUN_COMPLETED": "RUN_COMPLETED",
+        "RUN_FAILED": "RUN_FAILED",
+        "SHARE_URL_ADDED": "SHARE_URL_ADDED",
+        "SHARE_URL_DELETED": "SHARE_URL_DELETED",
+        "NAME_EDITED": "NAME_EDITED",
+        "TEAM_MEMBER_INVITED": "TEAM_MEMBER_INVITED",
+        "TEAM_MEMBER_REMOVED": "TEAM_MEMBER_REMOVED"
+      }
+    },
+    "estimate_status": {
+      "name": "estimate_status",
+      "values": {
+        "DRAFT": "DRAFT",
+        "AWAITING_APPROVAL": "AWAITING_APPROVAL",
+        "APPROVED": "APPROVED",
+        "QUEUED": "QUEUED",
+        "IN_PROGRESS": "IN_PROGRESS",
+        "COMPLETE": "COMPLETE",
+        "PARTIALLY_COMPLETE": "PARTIALLY_COMPLETE",
+        "FAILED": "FAILED"
+      }
+    },
+    "line_item_status": {
+      "name": "line_item_status",
+      "values": {
+        "PENDING": "PENDING",
+        "IN_PROGRESS": "IN_PROGRESS",
+        "ADDED": "ADDED",
+        "FAILED": "FAILED"
+      }
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
