@@ -1,0 +1,42 @@
+{
+  "id": "est-sparse-001",
+  "ownerId": "user-003",
+  "orgId": null,
+  "name": "Sparse Estimate",
+  "status": "APPROVED",
+  "yearOneStartMonth": "2025-06-01",
+  "pinnedArchitectureRevisionId": "arch-rev-sparse-001",
+  "lineItems": [
+    {
+      "id": "li-sparse-001",
+      "serviceCode": "cloudfront",
+      "configuration": { "priceClass": "PriceClass_100", "httpVersion": "http2" },
+      "region": "us-east-1",
+      "quantityPerYear": [0, 0, 3, 0, 1],
+      "status": "ADDED",
+      "failureReason": null
+    },
+    {
+      "id": "li-sparse-002",
+      "serviceCode": "s3",
+      "configuration": { "storageClass": "INTELLIGENT_TIERING", "gbPerMonth": 50 },
+      "region": "us-east-1",
+      "quantityPerYear": [0, 0, 2, 0, 0],
+      "status": "ADDED",
+      "failureReason": null
+    }
+  ],
+  "createdAt": "2025-06-01T12:00:00.000Z",
+  "updatedAt": "2025-06-05T09:15:00.000Z",
+  "architectureRevisions": [
+    {
+      "id": "arch-rev-sparse-001",
+      "estimateId": "est-sparse-001",
+      "mermaidSource": "graph LR\n  Origin[S3 Origin] --> CF[CloudFront Distribution]\n  CF --> Users[End Users]",
+      "agentCommentary": null,
+      "generationReason": "initial_architecture",
+      "promptMetadata": null,
+      "createdAt": "2025-06-01T12:05:00.000Z"
+    }
+  ]
+}

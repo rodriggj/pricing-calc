@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1778762105472,
+      "tag": "0000_clear_nico_minoru",
+      "breakpoints": true
+    }
+  ]
+}

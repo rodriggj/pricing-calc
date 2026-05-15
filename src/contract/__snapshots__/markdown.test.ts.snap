@@ -1,0 +1,182 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renderArchitectureMd > snapshot tests > renders correctly with commentary absent (null) 1`] = `
+"# Architecture: Architecture Test Estimate
+
+\`\`\`mermaid
+graph TD
+  A[Start] --> B[End]
+\`\`\`
+
+<!-- contract-metadata
+schemaVersion: v1.0.0
+rendererVersion: v1.0.0
+architectureRevisionId: arch-rev-001
+-->
+"
+`;
+
+exports[`renderArchitectureMd > snapshot tests > renders correctly with commentary as empty string (no Commentary section) 1`] = `
+"# Architecture: Architecture Test Estimate
+
+\`\`\`mermaid
+graph TD
+  A[Start] --> B[End]
+\`\`\`
+
+<!-- contract-metadata
+schemaVersion: v1.0.0
+rendererVersion: v1.0.0
+architectureRevisionId: arch-rev-001
+-->
+"
+`;
+
+exports[`renderArchitectureMd > snapshot tests > renders correctly with commentary present 1`] = `
+"# Architecture: Architecture Test Estimate
+
+\`\`\`mermaid
+graph TD
+  A[Start] --> B[End]
+\`\`\`
+
+## Commentary
+
+This architecture uses a simple flow from start to end.
+
+<!-- contract-metadata
+schemaVersion: v1.0.0
+rendererVersion: v1.0.0
+architectureRevisionId: arch-rev-001
+-->
+"
+`;
+
+exports[`renderEstimateMd > snapshot tests > renders all-zero payload correctly 1`] = `
+"# All Zero Estimate
+
+**Estimate ID:** est-zero-001
+**Status:** DRAFT
+**Region:** us-east-1
+**Year 1 starts:** December 2023
+
+## Year 1 — starting December 2023
+
+_No resources in this year._
+
+## Year 2 — starting December 2024
+
+_No resources in this year._
+
+## Year 3 — starting December 2025
+
+_No resources in this year._
+
+## Year 4 — starting December 2026
+
+_No resources in this year._
+
+## Year 5 — starting December 2027
+
+_No resources in this year._
+
+
+<!-- contract-metadata
+schemaVersion: v1.0.0
+rendererVersion: v1.0.0
+-->
+"
+`;
+
+exports[`renderEstimateMd > snapshot tests > renders flat-quantity payload correctly 1`] = `
+"# Flat Quantity Estimate
+
+**Estimate ID:** est-flat-001
+**Status:** DRAFT
+**Region:** us-east-1
+**Year 1 starts:** January 2024
+
+## Year 1 — starting January 2024
+
+| Service | Configuration | Quantity |
+|---------|---------------|----------|
+| ec2 | instanceType: t3.medium, memoryGib: 4, vCpu: 2 | 10 |
+| s3 | storageClass: STANDARD, storageGib: 100 | 5 |
+
+## Year 2 — starting January 2025
+
+| Service | Configuration | Quantity |
+|---------|---------------|----------|
+| ec2 | instanceType: t3.medium, memoryGib: 4, vCpu: 2 | 10 |
+| s3 | storageClass: STANDARD, storageGib: 100 | 5 |
+
+## Year 3 — starting January 2026
+
+| Service | Configuration | Quantity |
+|---------|---------------|----------|
+| ec2 | instanceType: t3.medium, memoryGib: 4, vCpu: 2 | 10 |
+| s3 | storageClass: STANDARD, storageGib: 100 | 5 |
+
+## Year 4 — starting January 2027
+
+| Service | Configuration | Quantity |
+|---------|---------------|----------|
+| ec2 | instanceType: t3.medium, memoryGib: 4, vCpu: 2 | 10 |
+| s3 | storageClass: STANDARD, storageGib: 100 | 5 |
+
+## Year 5 — starting January 2028
+
+| Service | Configuration | Quantity |
+|---------|---------------|----------|
+| ec2 | instanceType: t3.medium, memoryGib: 4, vCpu: 2 | 10 |
+| s3 | storageClass: STANDARD, storageGib: 100 | 5 |
+
+
+<!-- contract-metadata
+schemaVersion: v1.0.0
+rendererVersion: v1.0.0
+-->
+"
+`;
+
+exports[`renderEstimateMd > snapshot tests > renders sparse payload correctly 1`] = `
+"# Sparse Estimate
+
+**Estimate ID:** est-sparse-001
+**Status:** DRAFT
+**Region:** us-east-1
+**Year 1 starts:** March 2025
+
+## Year 1 — starting March 2025
+
+| Service | Configuration | Quantity |
+|---------|---------------|----------|
+| rds | engine: postgres, instanceClass: db.t3.medium | 2 |
+
+## Year 2 — starting March 2026
+
+_No resources in this year._
+
+## Year 3 — starting March 2027
+
+| Service | Configuration | Quantity |
+|---------|---------------|----------|
+| lambda | memoryMb: 512 | 1 |
+
+## Year 4 — starting March 2028
+
+| Service | Configuration | Quantity |
+|---------|---------------|----------|
+| rds | engine: postgres, instanceClass: db.t3.medium | 3 |
+
+## Year 5 — starting March 2029
+
+_No resources in this year._
+
+
+<!-- contract-metadata
+schemaVersion: v1.0.0
+rendererVersion: v1.0.0
+-->
+"
+`;

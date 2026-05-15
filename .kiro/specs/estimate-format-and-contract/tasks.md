@@ -21,7 +21,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
 
 ## Tasks
 
-- [ ] 1. Project scaffolding and dependency pinning
+- [x] 1. Project scaffolding and dependency pinning
   - Create the contract package directory layout: `src/contract/` (with `index.ts`, `schema.ts`, `projection.ts`, `markdown.ts`, `state-machine.ts`, `audit-log.ts`, `errors.ts`, `versions.ts`) and `src/db/schema/` (with one file per table plus a barrel `index.ts`).
   - Create `scripts/contract-harness.ts` entry point (skeleton only; implementation lands in Task 13).
   - Create `fixtures/sample-estimates/` and `out/` directories; add `out/` to `.gitignore`.
@@ -32,7 +32,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-6, NFR-1, NFR-2_
   - _Design: §"Components and Interfaces", §"Dependencies"_
 
-- [ ] 2. Drizzle schema for all five contract tables
+- [x] 2. Drizzle schema for all five contract tables
   - Define `estimateStatus`, `lineItemStatus`, and `auditActionType` Postgres enums with the exact member sets from D-11 v1 and D-30.3 (no `STALE`, no `SKIPPED`, no `UPDATED`).
   - Define the `estimates` table with the columns, defaults, and indexes from the design's Data Models section, including `deletedAt` (soft delete per D-32) and the `pinnedArchitectureRevisionId` foreign key.
   - Define the `lineItems` table with `quantityPerYear` typed as `[number, number, number, number, number]` jsonb, `region` defaulting to `'us-east-1'`, and the `(region = 'us-east-1')` CHECK constraint expressed inline so drizzle-kit emits it.
@@ -43,7 +43,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-1 (AC-1, AC-2, AC-3, AC-4), INV-1 (AC-1)_
   - _Design: §"Drizzle Schema Module", §"Data Models", §"Postgres Enums"_
 
-- [ ] 3. Generate and verify the initial migration
+- [x] 3. Generate and verify the initial migration
   - Run `pnpm drizzle-kit generate` to produce the SQL migration in `migrations/`. Commit the generated SQL.
   - Hand-inspect the generated SQL to confirm it includes the partial unique index (with the `WHERE` clause), the region CHECK constraint, the three enums, and all foreign keys with `ON DELETE CASCADE` where the design specifies.
   - Run `pnpm db:migrate` against an empty Postgres instance and confirm exit code 0.
@@ -52,7 +52,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-1 (AC-5, AC-6)_
   - _Design: §"Drizzle Schema Module"_
 
-- [ ] 4. Zod validators and cross-field refinements
+- [x] 4. Zod validators and cross-field refinements
   - Implement `LineItemSchema` enforcing the exact-five-non-negative-integers tuple, the `'us-east-1'` literal region, and the service-code allow-list from D-08.
   - Implement `EstimatePayloadSchema` composing `LineItemSchema`, validating the `YYYY-MM-01` first-of-month form for `yearOneStartMonth`, validating `status` as the v1 enum, and adding the cross-field refinement that requires `pinnedArchitectureRevisionId` to be non-null whenever `status` is in `{AWAITING_APPROVAL, APPROVED, QUEUED, IN_PROGRESS, COMPLETE, PARTIALLY_COMPLETE, FAILED}`.
   - Implement `PerYearGroupPayloadSchema` mirroring the projection output type (5-tuple of `YearGroup`s).
@@ -63,7 +63,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-2 (AC-1 through AC-8), INV-2 (AC-1), INV-4 (AC-1), INV-12 (AC-1), NFR-3_
   - _Design: §"Zod Validators", §"Wire payload"_
 
-- [ ] 5. Projection function
+- [x] 5. Projection function
   - Implement `projectToPerYearGroups(payload: EstimatePayload): PerYearGroupPayload` per Algorithm 1 in the design. Pure, no input mutation, deterministic ordering by `lineItemId` ascending within each group.
   - Compute year-start months by adding `(yearIndex − 1) × 12` calendar months to `payload.yearOneStartMonth` (no timezone arithmetic; treat the date as a calendar date).
   - Omit zero-quantity items entirely; carry the line item's `configuration` forward unchanged into every year group it appears in.
@@ -72,7 +72,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-3 (AC-1 through AC-7)_
   - _Design: §"Projection Function", §"Algorithm 1"_
 
-- [ ] 6. Estimate Markdown renderer
+- [x] 6. Estimate Markdown renderer
   - Implement `renderEstimateMd(payload: EstimatePayload): string` per Algorithm 2. Total: never throws on validated input. Deterministic: byte-identical output for byte-identical input modulo the metadata block, which itself is constant given pinned `CONTRACT_SCHEMA_VERSION` and `RENDERER_VERSION`.
   - Implement a deterministic `formatConfig` helper (sorted keys, stable separators) that escapes Markdown table-cell special characters in user-supplied strings.
   - Emit one `## Year N — starting <Month YYYY>` section per year; emit `_No resources in this year._` placeholder when the group is empty; emit a Markdown table with `Service | Configuration | Quantity` columns when non-empty.
@@ -81,7 +81,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-4 (AC-1 through AC-8)_
   - _Design: §"Markdown Renderers", §"Algorithm 2"_
 
-- [ ] 7. Architecture Markdown renderer
+- [x] 7. Architecture Markdown renderer
   - Implement `renderArchitectureMd(payload: EstimatePayload, archRev: ArchitectureRevision): string` per Algorithm 3.
   - Throw `ContractInvariantError` (from Task 4) when `archRev.id !== payload.pinnedArchitectureRevisionId`, with a message identifying the mismatch.
   - Emit a fenced ``` ```mermaid ``` block whose body is exactly `archRev.mermaidSource`. Emit a `## Commentary` section iff `agentCommentary` is non-empty.
@@ -90,7 +90,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-5 (AC-1 through AC-6)_
   - _Design: §"Markdown Renderers", §"Algorithm 3"_
 
-- [ ] 8. Estimate status state machine
+- [x] 8. Estimate status state machine
   - Implement `isLegalEstimateStatusTransition(from: EstimateStatus, to: EstimateStatus): boolean` from a transition table that exactly mirrors the v1 state machine diagram (no `STALE`).
   - Encode the transitions as a `readonly` map of `EstimateStatus` to `ReadonlyArray<EstimateStatus>` so every legal edge is enumerable; include the `[*] → DRAFT` initial transition by convention.
   - Add unit tests enumerating every legal transition (asserts true) and a sample of illegal transitions (e.g., `DRAFT → COMPLETE`, `COMPLETE → DRAFT`) — exhaustive enumeration over the cross-product is left to the I-8 PBT in Task 12.
@@ -98,7 +98,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: INV-8 (AC-1)_
   - _Design: §"Status State Machine"_
 
-- [ ] 9. Audit log append-only helper
+- [x] 9. Audit log append-only helper
   - Implement `appendAuditLogEntry(db, entry)` in `src/contract/audit-log.ts`. Insertion-only API surface; no `update*` and no `delete*` exports.
   - Type the entry input strictly to the `auditActionType` enum and the `AuditDetails` jsonb shape.
   - Add a unit test that inserts a row and selects it back; verify the row matches.
@@ -106,7 +106,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: INV-11 (AC-1)_
   - _Design: §"Data Models — `estimate_audit_log`"_
 
-- [ ] 10. Contract module index and version constants
+- [x] 10. Contract module index and version constants
   - In `src/contract/index.ts`, re-export every public symbol from Tasks 4 (`EstimatePayloadSchema`, `LineItemSchema`, `PerYearGroupPayloadSchema`, `ShareUrlRevisionSchema`, `parseEstimatePayload`, `safeParseEstimatePayload`, `ContractInvariantError`), 5 (`projectToPerYearGroups`), 6 (`renderEstimateMd`), 7 (`renderArchitectureMd`), 8 (`isLegalEstimateStatusTransition`), and 9 (`appendAuditLogEntry`).
   - Re-export the TypeScript types `EstimatePayload`, `LineItem`, `Configuration`, `PerYearGroupPayload`, `YearGroup`, `YearGroupItem`, `ShareUrlRevision`, `ArchitectureRevision`, `EstimateStatus`, `LineItemStatus`, `AuditActionType`.
   - In `src/contract/versions.ts`, declare `export const CONTRACT_SCHEMA_VERSION = 'v1.0.0'` and `export const RENDERER_VERSION = 'v1.0.0'` (or equivalent semantic strings); re-export both from `index.ts`.
@@ -115,7 +115,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-6 (AC-1, AC-2, AC-3), NFR-3 (AC-1, AC-2)_
   - _Design: §"Components and Interfaces"_
 
-- [ ] 11. Canonical fixtures
+- [x] 11. Canonical fixtures
   - Author `fixtures/sample-estimates/flat-quantity.json` — same quantity across all five years; used to exercise the constant-config invariant and the all-years-non-empty rendering path.
   - Author `fixtures/sample-estimates/three-year-ramp.json` — monotonically increasing quantities (e.g., 1, 2, 3, 4, 5); used as the demo-script reference fixture.
   - Author `fixtures/sample-estimates/sparse.json` — some line items have zero quantity in some years (including at least one year with zero items total) to exercise the empty-group placeholder rendering.
@@ -124,7 +124,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-Harness (AC-8)_
   - _Design: §"Test Harness Design"_
 
-- [ ] 12. Property-based test generators and properties
+- [x] 12. Property-based test generators and properties
   - Implement the shared `fast-check` generators in `src/contract/__pbt__/arbitraries.ts`:
     - `arbConfig` — random JSON object with bounded depth and key count.
     - `arbLineItem` — random service code (from D-08 vocabulary), random `arbConfig` configuration, region pinned to `'us-east-1'`, length-5 tuple of non-negative bounded integers, random status from `lineItemStatus`.
@@ -147,7 +147,7 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: INV-1, INV-2, INV-3, INV-4, INV-5, INV-6, INV-7, INV-8, INV-9, INV-10, INV-12, NFR-5_
   - _Design: §"Property-Based Testing Approach", §"Correctness Properties (Invariants)"_
 
-- [ ] 13. Test harness CLI, fixture wiring, and structural check for I-11
+- [x] 13. Test harness CLI, fixture wiring, and structural check for I-11
   - Implement `scripts/contract-harness.ts` as a Node script invoked by `pnpm contract:harness`. Use a tiny argparse (e.g., manual `process.argv` slicing) supporting `--pbt-only` and `--fixture <path>`; reject unknown flags.
   - On full run: load every `*.json` under `fixtures/sample-estimates/`, run each through `parseEstimatePayload`, then `projectToPerYearGroups`, then `renderEstimateMd`, then `renderArchitectureMd`, and write `out/<fixture>.projected.json`, `out/<fixture>.estimate.md`, `out/<fixture>.architecture.md` for each. Use canonical JSON formatting (sorted keys, two-space indent) for the projected JSON so determinism is preserved.
   - Run the 11 PBT properties from Task 12 (or only the PBTs when `--pbt-only` is passed). Capture per-property results and the seed used; write `out/pbt-report.json` summarizing counts, durations, and seeds.
@@ -157,14 +157,14 @@ The final demo (Task 15) is a walk-through of the demo script in `requirements.m
   - _Requirements: FR-Harness (AC-1 through AC-7), INV-11 (AC-1, AC-2), NFR-3, NFR-5_
   - _Design: §"Test Harness Design", §"Component 5: Test Harness"_
 
-- [ ] 14. Determinism check and performance timing
+- [x] 14. Determinism check and performance timing
   - Add a `pnpm contract:harness:verify-determinism` script that runs the harness twice in succession (against a clean `out/` each time, with the same fixture set) and asserts the diff of `out/` between the two runs is empty. Exits non-zero on any byte difference. This satisfies FR-Harness AC-6 at the harness level and complements the Property 5 PBT (which checks renderer-only determinism over generated payloads).
   - Add lightweight timing instrumentation around `parseEstimatePayload`, `projectToPerYearGroups`, `renderEstimateMd`, and `renderArchitectureMd` in the harness; emit per-call durations into `out/pbt-report.json` under a `timings` key. Assert that no call exceeds 100 ms on a 100-line-item fixture (NFR-4 AC-1) and that the full PBT suite completes in under 60 seconds (NFR-4 AC-2).
   - Document the developer reference machine (CPU, RAM, Node version) in `out/pbt-report.json` so the timing assertions are interpretable across environments.
   - _Requirements: FR-Harness (AC-6), NFR-4 (AC-1, AC-2), INV-5_
   - _Design: §"Performance Considerations", §"Test Harness Design"_
 
-- [ ] 15. Demo script verification
+- [x] 15. Demo script verification
   - Walk through every step of the demo script in `requirements.md` against a fresh checkout and confirm each observable matches the spec exactly:
     - Step 1–4: `pnpm install` succeeds, `pnpm db:migrate` is idempotent, `pnpm contract:harness` exits 0.
     - Observe a: stdout shows `Fixtures: 3 / 3 validated, projected, and rendered` and `PBT properties: 11 / 11 passed (1024 cases each, seed=<hex>)`.
